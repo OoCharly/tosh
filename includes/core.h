@@ -6,54 +6,54 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 14:14:05 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/18 13:17:16 by tboos            ###   ########.fr       */
+/*   Updated: 2016/11/23 17:07:24 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CORE_H
 # define CORE_H
 
-# define SHNAME "21sh"
-# define HISTORY_SIZE 100
-# define FT_PUTSTRFD ft_putstr_str_str_fd
-# define DPATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+# define SHNAME			"21sh"
+# define HISTORY_SIZE	100
+# define FT_PUTSTRFD	ft_putstr_str_str_fd
+# define DPATH	"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 /*
 ** SHELL STATES
 */
-# define RUNNING_COMMAND 1
-# define SCANNING_COMMAND 2
-# define SIGTSTP_COMMAND 3
-# define SIGINT_COMMAND 4
-# define RUNNING_SSHELL 5
-# define RUNNING_SON 6
+# define RUNNING_COMMAND	1
+# define SCANNING_COMMAND	2
+# define SIGTSTP_COMMAND	3
+# define SIGINT_COMMAND		4
+# define RUNNING_SSHELL		5
+# define RUNNING_SON		6
 
 /*
 **Env builtin defines (params)
 */
-# define ENV_I 0x01
-# define ENV_H 0x02
-# define ENV_HELP "--help"
-# define ENV_UNSET "--unset"
-# define ENV_IGNORE "--ignore-environment"
+# define ENV_I		0x01
+# define ENV_H		0x02
+# define ENV_HELP	"--help"
+# define ENV_UNSET	"--unset"
+# define ENV_IGNORE	"--ignore-environment"
 
 /*
 **Echo builtin defines (params)
 */
-# define ECHO_N 0x01
+# define ECHO_N		0x01
 
 /*
 **jobs builtin defines
 */
-# define JOBS_FG 0
-# define JOBS_BG 1
+# define JOBS_FG	0
+# define JOBS_BG	1
 
 /*
 ** ft_signal modes
 */
-# define SIGNAL_SET 0
-# define SIGNAL_RESET 1
-# define SIGNAL_SCRIPT 2
+# define SIGNAL_SET		0
+# define SIGNAL_RESET	1
+# define SIGNAL_SCRIPT	2
 
 typedef struct dirent	t_dirent;
 typedef struct termios	t_termios;
