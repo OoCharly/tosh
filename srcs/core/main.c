@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/18 17:44:08 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/17 18:39:45 by maxpetit         ###   ########.fr       */
+/*   Updated: 2016/11/25 16:23:01 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	ft_manage_files(int ac, char **av, t_config *config)
 	while (++i < ac)
 	{
 		if ((fd = open(av[i], O_RDONLY)) < 0
-				&& ft_error(SHNAME, "can't open input file", av[i], 1 | SERROR))
+				&& ft_error(SHNAME, "Permission Denied", av[i], 1 | SERROR))
 			return ;
 		ft_shname_or_file(av[i]);
 		ft_script_line(-1);

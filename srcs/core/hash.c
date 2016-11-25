@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/22 08:32:24 by tboos             #+#    #+#             */
-/*   Updated: 2016/03/28 16:18:43 by tboos            ###   ########.fr       */
+/*   Updated: 2016/11/25 19:32:05 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,53 +50,65 @@ static void	ft_hash_bin(t_config *config)
 	}
 }
 
+int	*check_bin(char *path, t_dirent tdir, t_bin **pbin)
+{
+	t_st	*st;
+	t_bin	bin;
+
+	if (!(bin.path_name = ft_strslash(path, tdir.d_name)))
+		return(-1);
+	if (stat(bin.path_name, st) || !S_ISREG(st->st_mode))
+		return (0);
+	bin.name = tdir.d_name;
+	*pbin = ft_memmove(ft_memalloc(sizeof(t_bin)), &bin, sizeof(t_bin));
+	return ((pbin) ? 0 : -1);
+}
+
 static void	ft_bin_insert(DIR *dir, char *path, t_config *config)
 {
 	t_dirent	*dirent;
-	t_bin		bin;
+	t_bin		*bin;
 	t_list		*new;
 
+	bin = NULL;
 	while ((dirent = readdir(dir)))
 	{
-		if (!(bin.path_name = ft_strslashjoin(path, dirent->d_name))
-				|| !(bin.name = ft_strrchr(bin.path_name, '/'))
-				|| !(++(bin.name))
-				|| !(new = ft_lstnew(ft_memmove(ft_memalloc(sizeof(t_bin)),
-				&bin, sizeof(t_bin)), sizeof(t_bin))))
+		if ((check_bin(path, dirent, &bin)))
 			ft_error(SHNAME, NULL, "error creating path to bin", CR_ERROR);
-		else if (!ft_strcmp(dirent->d_name, ".")
-				|| !ft_strcmp(dirent->d_name, ".."))
-			ft_lstdel(&new, &ft_freebin);
-		else if (new->data)
+		if (bin)
+		{
+			if(!(new = ft_lstnew(bin, sizeof(t_bin))))
+			{
+				ft_freebin(bin, sizeof(t_bin));
+				ft_error(SHNAME, NULL, "error creating path to bin", CR_ERROR);
+			}
 			ft_sorted_list_insert(&(config->bin), new, &ft_ascii_cmp);
-		else
-			free(new);
+		}
 	}
 }
 
 static int	ft_create_list_bin(char *path, t_config *config)
 {
-	char	*dirpath;
-	char	*kill;
-	DIR		*dir;
+	char		*dirpath;
+	char		*kill;
+	DIR			*dir;
 
 	if (!(path = ft_strchr(path, '=')) || !*(++path)
-		|| !(path = ft_strdup(path)))
+			|| !(path = ft_strdup(path)))
 		return (0);
 	kill = path;
 	while ((dirpath = path))
 	{
 		path = ft_strchr(path, ':');
-		if (path && (++path))
-			*(path - 1) = '\0';
-		if ((dir = opendir(dirpath)))
+		*path++ = 0;
+		if (access(path, R_OK | X_OK) && (dir = opendir(path)))
 		{
 			ft_bin_insert(dir, dirpath, config);
 			closedir(dir);
 		}
 	}
-	free(kill);
-	return (1);
+	ft_freegiveone(&kill);
+	return (0);
 }
 
 int			ft_pathtohash(t_config *config)

@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 14:14:05 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/23 17:07:24 by cdesvern         ###   ########.fr       */
+/*   Updated: 2016/11/25 15:53:56 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,13 @@
 typedef struct dirent	t_dirent;
 typedef struct termios	t_termios;
 typedef struct passwd	t_passwd;
+typedef struct stat		t_st;
 typedef struct	s_bin
 {
 	char		*name;
 	char		*path_name;
 }				t_bin;
+
 typedef struct	s_config
 {
 	int			shell_state;
