@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/28 16:20:26 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/29 18:36:37 by cdesvern         ###   ########.fr       */
+/*   Updated: 2016/12/05 17:13:22 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,15 @@ char		*ft_path_handle(char **argv, t_config *config)
 	if (!ft_strcmp(argv[0], "pwd") || !ft_strcmp(argv[0], "echo")
 		|| !ft_strcmp(argv[0], "env") || !ft_strcmp(argv[0], "printenv"))
 		return (argv[0]);
-	if ((path = ft_return_binpath(config, argv[0])))
-		;
-	else
-		path = argv[0];
+	if (ft_strcmp(config->last_hash, ft_strtabfindstart(config->env, "PATH=")))
+		ft_pathtohash(config);
+	if (ft_return_binpath(config, argv[0], &path))
+	{
+		path = NULL;
+		ft_pathtohash(config);
+		ft_return_binpath(config, argv[0], &path);
+		path = (path) ? path : argv[0];
+	}
 	if (!ft_access_exec(path, argv, config))
 		return (NULL);
 	return (path);

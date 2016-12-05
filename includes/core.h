@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 14:14:05 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/25 15:53:56 by cdesvern         ###   ########.fr       */
+/*   Updated: 2016/11/30 13:59:14 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct	s_config
 	char		dot_sequence;
 	int			last_exit;
 	bool		syntax_color_off;
+	char		*last_hash;
 }				t_config;
 /*
 **builtin.c && environ.c
@@ -123,7 +124,7 @@ char			*ft_qerr(char *err);
 **hash.c && cmp.c
 */
 int				ft_pathtohash(t_config *config);
-char			*ft_return_binpath(t_config *config, char *name);
+int				ft_return_binpath(t_config *config, char *name, char **path);
 int				ft_proscmp(void *pid1, void *pid2);
 int				ft_ascii_cmp(t_bin *s1, t_bin *s2);
 /*
@@ -151,5 +152,7 @@ void			ft_print_list(t_list *elem);
 int				ft_signal(int mode);
 void			ft_signal_handle(int i);
 void			ft_sigwinch(int mode);
+
+void	debug_print_list(t_list **lst);
 
 #endif

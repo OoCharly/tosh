@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 12:54:52 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/14 12:54:54 by tboos            ###   ########.fr       */
+/*   Updated: 2016/12/05 17:00:46 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void		ft_pipe_process(int *r_pipe, t_list *pipe)
 }
 
 static void		ft_pack_process(t_list *begin, t_config *config, int *r_pipe,
-				char *path)
+		char *path)
 {
 	t_list	*sshell;
 
@@ -59,10 +59,10 @@ static void		ft_pack_process(t_list *begin, t_config *config, int *r_pipe,
 	if (begin->data_size == SSHELL && (config->shell_state = RUNNING_SSHELL))
 	{
 		if ((config->last_exit = ft_strtabifindstart(config->env,
-			"SHLVL")) != -1)
+						"SHLVL")) != -1)
 			ft_setenv("SHLVL",
-				ft_st_itoa(ft_atoi(config->env[config->last_exit] + 6) - 1),
-			config);
+					ft_st_itoa(ft_atoi(config->env[config->last_exit] + 6) - 1),
+					config);
 		sshell = (t_list*)begin->data;
 		begin->data = NULL;
 		ft_freelist(&config->chimera);
@@ -84,18 +84,18 @@ static t_list	*ft_fork_process(t_list *begin, t_config *config, int *r_pipe)
 	char	*path;
 
 	new = NULL;
-	if (!begin->data_size && ((!begin->data || !((char*)begin->data)[0])
-		|| ft_is_no_fork_builtin(begin->data, config)
-		|| !(path = ft_path_handle(begin->data, config))))
+	if (!begin->data_size && ((!begin->data || !(*(char**)begin->data))
+				|| ft_is_no_fork_builtin(begin->data, config)
+				|| !(path = ft_path_handle(begin->data, config))))
 		return (NULL);
 	else if ((pid = fork()) == -1
-		&& ft_error(SHNAME, "parser", "fork error", CR_ERROR))
+			&& ft_error(SHNAME, "parser", "fork error", CR_ERROR))
 		return (NULL);
 	else if (!pid)
 		ft_pack_process(begin, config, r_pipe, path);
 	else if (!(mem = (pid_t*)ft_memalloc(sizeof(pid_t)))
-		|| !(*mem = pid)
-		|| !(new = ft_lstnew((void *)mem, PROS)))
+			|| !(*mem = pid)
+			|| !(new = ft_lstnew((void *)mem, PROS)))
 		ft_error(SHNAME, "parser", "malloc error on process control", CR_ERROR);
 	return (new);
 }

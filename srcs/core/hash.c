@@ -6,57 +6,13 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/22 08:32:24 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/29 18:36:59 by cdesvern         ###   ########.fr       */
+/*   Updated: 2016/12/05 16:12:24 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char		*ft_return_binpath(t_config *config, char *name)
-{
-	t_list	*archer;
-	int		i;
-	char	*fpath;
-
-	fpath = NULL;
-	if (config->bin)
-	{
-		i = (name[0] < 'a' ? 0 : name[0] - 'a' + 1);
-		i = (i > 33 ? 33 : i);
-		archer = config->h_bin[i];
-		while (archer && (((t_bin *)archer->data)->name[0] - 'a') < i
-				&& ft_strcmp(name, ((t_bin *)archer->data)->name))
-			archer = archer->next;
-		if (archer && !(ft_strcmp(name, ((t_bin *)archer->data)->name)))
-		{
-			fpath = ((t_bin *)archer->data)->path_name;
-			if (!access(fpath, X_OK))
-				return (fpath);
-		}
-	}
-	return (fpath);
-}
-
-static void	ft_hash_bin(t_config *config)
-{
-	short	index;
-	t_list	*rabbit;
-	char	c;
-
-	rabbit = config->bin;
-	c = 'a';
-	index = 0;
-	while (index < 34)
-	{
-		config->h_bin[index] = rabbit;
-		while (rabbit && (((t_bin *)rabbit->data)->name[0] < c))
-			rabbit = rabbit->next;
-		index++;
-		c++;
-	}
-}
-
-int	check_bin(char *path, t_dirent tdir, t_bin **pbin)
+static int	check_bin(char *path, t_dirent tdir, t_bin **pbin)
 {
 	t_st	st;
 	t_bin	bin;
@@ -70,7 +26,8 @@ int	check_bin(char *path, t_dirent tdir, t_bin **pbin)
 	if (!(bin.name = ft_strdup(tdir.d_name)))
 		return (-1);
 	bin.path_name = fpath;
-	*pbin = ft_memmove(ft_memalloc(sizeof(t_bin)), &bin, sizeof(t_bin));
+	if (!(*pbin = ft_memmove(ft_memalloc(sizeof(t_bin)), &bin, sizeof(t_bin))))
+		free(bin.name);;
 	return ((pbin) ? 0 : -1);
 }
 
@@ -109,7 +66,6 @@ static int	ft_create_list_bin(char *path, t_config *config)
 	kill = path;
 	while ((dirpath = path))
 	{
-		dirpath = path;
 		if ((path = ft_strchr(path, ':')))
 			*(path++) = 0;
 		if (!access(dirpath, R_OK | X_OK) && (dir = opendir(dirpath)))
@@ -125,14 +81,52 @@ static int	ft_create_list_bin(char *path, t_config *config)
 int			ft_pathtohash(t_config *config)
 {
 	char	*path;
+	short	index;
+	t_list	*rabbit;
+	char	c;
 
 	if (config->bin)
 		ft_lstdel(&(config->bin), &ft_freebin);
 	if ((path = ft_strtabfindstart(config->env, "PATH=")))
 	{
+		config->last_hash = ft_strdup(path);
 		if (!(ft_create_list_bin(path, config)))
 			return (0);
-		ft_hash_bin(config);
+		rabbit = config->bin;
+		c = 'a';
+		index = 0;
+		while (index < 34)
+		{
+			config->h_bin[index] = rabbit;
+			while (rabbit && (((t_bin *)rabbit->data)->name[0] < c))
+				rabbit = rabbit->next;
+			index++;
+			c++;
+		}
 	}
 	return (1);
+}
+
+int			ft_return_binpath(t_config *config, char *name, char **fpath)
+{
+	t_list	*archer;
+	int		i;
+
+	*fpath = NULL;
+	if (config->bin)
+	{
+		i = (name[0] < 'a' ? 0 : name[0] - 'a' + 1);
+		i = (i > 33 ? 33 : i);
+		archer = config->h_bin[i];
+		while (archer && (((t_bin *)archer->data)->name[0] - 'a') < i
+				&& ft_strcmp(name, ((t_bin *)archer->data)->name))
+			archer = archer->next;
+		if (archer && !(ft_strcmp(name, ((t_bin *)archer->data)->name)))
+		{
+			*fpath = ((t_bin *)archer->data)->path_name;
+			if (!access(*fpath, X_OK))
+				return (0);
+		}
+	}
+	return (-1);
 }

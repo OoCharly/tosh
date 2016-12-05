@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 09:18:53 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/15 13:13:52 by rbaran           ###   ########.fr       */
+/*   Updated: 2016/12/05 13:13:10 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,5 @@ void			ft_parse(t_config *config)
 		&& (test == ';' || (test == '&' && !config->last_exit)
 		|| (test == '|' && config->last_exit)))
 		ft_sentence(config->chimera, config);
-	ft_freelist(&config->chimera);
+		ft_freelist(&config->chimera);
 }

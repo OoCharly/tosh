@@ -6,7 +6,7 @@
 /*   By: tboos <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/28 16:21:35 by tboos             #+#    #+#             */
-/*   Updated: 2016/11/14 08:51:32 by tboos            ###   ########.fr       */
+/*   Updated: 2016/12/05 17:26:43 by cdesvern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	ft_setenv(char *n, char *val, t_config *config)
 		ft_pathtohash(config);
 	if (i >= 0)
 		ft_freegiveone((void**)&(memo));
+	ft_putendl(f[i]);
 }
 
 void	ft_readysetenv(char **argv, t_config *config)
